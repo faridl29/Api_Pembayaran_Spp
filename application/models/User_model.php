@@ -39,15 +39,15 @@ class User_model extends CI_Model {
         return $data;
     }
 
-    public function simpanToken($id, $email, $token){
-        $sql = "INSERT INTO token(id,email,token) VALUES(?, ?, ?)";
-        $stmt = $this->db->query($sql,array($id, $email, $token));
+    public function simpanToken($nisn, $token){
+        $sql = "INSERT INTO token(nisn, token) VALUES(?, ?)";
+        $stmt = $this->db->query($sql,array($nisn, $token));
 
 
         // cek jika sudah sukses
         if ($stmt) {
-            $sql = "SELECT token FROM token WHERE email = ?";
-			$stmt = $this->db->query($sql, array($email));
+            $sql = "SELECT token FROM token WHERE nisn = ?";
+			$stmt = $this->db->query($sql, array($nisn));
 		
             return $stmt->row_array();
         } else {
@@ -60,16 +60,12 @@ class User_model extends CI_Model {
         $this->db->from('token');
         $this->db->where('token', $token);
         $query = $this->db->get();
- 
 
         if ($query->num_rows() > 0) {
            
             $this->db->where('token', $token);
             $this->db->delete('token');
-            return true;
-
-        } else {
-            return false;
-        }
+        } 
+        return true;
     }
 }
