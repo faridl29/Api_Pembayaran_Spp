@@ -12,6 +12,7 @@ class Notifikasi extends REST_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('User_model');
+		$this->load->helper('waktu');
 	}
 
 	public function index_post(){
@@ -31,20 +32,25 @@ class Notifikasi extends REST_Controller {
 		$this->db->where('nisn', $nisn);
 		$this->db->order_by('waktu', 'DESC');
 		$notifikasi = $this->db->get('notifikasi')->result();
+
+		foreach($notifikasi as $row){
+			$row->waktu = waktu_lalu($row->waktu);	
+		}
+		
 		
 		$this->response(array("result"=>$notifikasi,200));	
 	}
 
 	public function clicked_post(){
-		$nisn = $this->post('nisn');
+		$id = $this->post('id');
 
 		$data = array('isClicked' => "1");
-        $this->db->where('nisn', $nisn);
+        $this->db->where('id', $id);
         $this->db->update('notifikasi', $data);
 
 	}
 
-	public function notif_get(){
+	public function badge_get(){
 		$nisn = $this->get('nisn');
 
 		$this->db->where('nisn', $nisn);
