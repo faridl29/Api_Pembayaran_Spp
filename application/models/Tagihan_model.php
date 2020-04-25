@@ -55,13 +55,12 @@ class Tagihan_model extends CI_Model {
         $tgl_bayar = array();
         $tagihan_bulanan = array();
 
-        $this->db->from('pembayaran');
-        $this->db->where('id_tagihan', $id);
-        $this->db->join('spp' , 'spp.id_spp = pembayaran.id_spp');
-        $query = $this->db->get();
-        $hasil2 = $query->row_array();
 
-        $tagihan_spp = $hasil2['nominal'];
+        $this->db->from('tagihan');
+        $this->db->where('id', $id);
+        $this->db->join('spp' , 'spp.id_spp = tagihan.id_spp');
+        $query = $this->db->get();
+        $spp = $query->row_array();
         
         $i= 0;
         foreach($bulan as $row){
@@ -77,7 +76,7 @@ class Tagihan_model extends CI_Model {
             if($hasil < 1){
                 $nama_petugas[$i] = "";
                 $tgl_bayar[$i] = "";
-                $tagihan_bulanan[$i] = $tagihan_spp;
+                $tagihan_bulanan[$i] = $spp["nominal"];
             }else{
                 $nama_petugas[$i] = $hasil2['nama_petugas'];
                 $tgl_bayar[$i] = date_indo($hasil2['tgl_bayar']);
